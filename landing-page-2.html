@@ -1,0 +1,1394 @@
+﻿<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Refugio Cumbral — Donde el silencio tiene forma</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@200;300;400&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════
+   VARIABLES — LIGHT + DARK
+══════════════════════════════════════════ */
+:root {
+  --bg: #f4efe6;
+  --bg2: #ede7dd;
+  --ink: #1c1410;
+  --ink2: #3a2c22;
+  --brown: #44332a;
+  --brown-mid: #58403a;
+  --brown-warm: #7a5c48;
+  --brown-light: #a07c64;
+  --slate: #242c35;
+  --slate2: #2d3744;
+  --gold: #c4a07a;
+  --gold2: #d4b896;
+  --card-bg: rgba(0,0,0,.06);
+  --card-border: rgba(0,0,0,.08);
+  --text-section: #5a4236;
+  --nav-text: rgba(244,239,230,.82);
+  --dim: rgba(222,206,185,.62);
+  --dim2: rgba(222,206,185,.84);
+  --serif: 'Cormorant', Georgia, serif;
+  --sans: 'Jost', system-ui, sans-serif;
+  --transition: background .5s ease, color .5s ease, border-color .5s ease;
+}
+[data-theme="dark"] {
+  --bg: #0e0b08;
+  --bg2: #141009;
+  --ink: #e8dfd2;
+  --ink2: #c4b8a8;
+  --brown: #2a1e16;
+  --brown-mid: #1e1510;
+  --brown-warm: #5a3e2c;
+  --card-bg: rgba(255,255,255,.04);
+  --card-border: rgba(255,255,255,.07);
+  --text-section: #a08070;
+  --slate: #0a0e14;
+  --slate2: #10151e;
+}
+
+/* ══════════════════════════════════════════
+   RESET
+══════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--ink);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  transition: var(--transition);
+}
+img { display: block; width: 100%; }
+a { text-decoration: none; color: inherit; }
+button { font-family: inherit; cursor: pointer; border: none; background: none; }
+
+/* ══════════════════════════════════════════
+   LAZY IMAGE — blur placeholder
+══════════════════════════════════════════ */
+.img-wrap {
+  position: relative;
+  overflow: hidden;
+  background: var(--bg2);
+  width: 100%; height: 100%;
+}
+.img-wrap::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, var(--bg2) 25%, transparent 50%, var(--bg2) 75%);
+  background-size: 300% 300%;
+  animation: shimmer 1.6s ease infinite;
+  z-index: 1;
+  transition: opacity .4s;
+}
+.img-wrap.loaded::before { opacity: 0; pointer-events: none; }
+@keyframes shimmer {
+  0%   { background-position: 0% 0%; }
+  100% { background-position: 300% 300%; }
+}
+.img-wrap img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity .55s ease, transform .7s ease;
+  z-index: 2;
+}
+.img-wrap.loaded img { opacity: 1; }
+.img-wrap:hover img { transform: scale(1.046); }
+
+/* ══════════════════════════════════════════
+   DARK MODE TOGGLE
+══════════════════════════════════════════ */
+.theme-btn {
+  position: fixed;
+  bottom: 28px; right: 28px;
+  z-index: 800;
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  background: var(--brown-mid);
+  border: 1px solid rgba(196,160,122,.35);
+  color: var(--gold2);
+  font-size: 1.1rem;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 24px rgba(0,0,0,.28);
+  transition: transform .3s, background .4s, box-shadow .3s;
+  cursor: pointer;
+}
+.theme-btn:hover {
+  transform: scale(1.1) rotate(18deg);
+  box-shadow: 0 6px 30px rgba(0,0,0,.38);
+}
+.theme-btn .icon-sun  { display: none; }
+.theme-btn .icon-moon { display: block; }
+[data-theme="dark"] .theme-btn .icon-sun  { display: block; }
+[data-theme="dark"] .theme-btn .icon-moon { display: none; }
+
+/* ══════════════════════════════════════════
+   NAV
+══════════════════════════════════════════ */
+nav {
+  position: fixed; inset: 0 0 auto; z-index: 900;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 26px 52px;
+  transition: background .45s, padding .3s;
+}
+nav.stuck {
+  background: rgba(10, 7, 4, .92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  padding: 14px 52px;
+}
+.nav-logo {
+  font-family: var(--serif); font-size: 1.08rem; font-weight: 400;
+  color: #f4efe6; letter-spacing: .025em; white-space: nowrap;
+}
+.nav-ul {
+  display: flex; gap: 36px; list-style: none; align-items: center;
+}
+.nav-ul a {
+  font-family: var(--sans); font-size: .63rem; font-weight: 300;
+  letter-spacing: .18em; text-transform: uppercase;
+  color: rgba(244,239,230,.76);
+  transition: color .2s;
+}
+.nav-ul a:hover { color: #f4efe6; }
+.nav-reservar {
+  color: rgba(244,239,230,.9) !important;
+  display: flex; align-items: center; gap: 8px;
+}
+.nav-reservar::after { content: '→'; opacity: .65; font-size: .8rem; }
+.hbg {
+  display: none; flex-direction: column; justify-content: center;
+  gap: 6px; cursor: pointer; padding: 4px;
+}
+.hbg span {
+  display: block; width: 24px; height: 1.5px;
+  background: #f4efe6; border-radius: 2px;
+  transition: transform .35s, opacity .35s;
+}
+.hbg.open span:nth-child(1) { transform: translateY(7.5px) rotate(45deg); }
+.hbg.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.hbg.open span:nth-child(3) { transform: translateY(-7.5px) rotate(-45deg); }
+/* overlay oscuro detrás del panel */
+.drawer-overlay {
+  position: fixed; inset: 0; z-index: 898;
+  background: rgba(8,4,2,.48);
+  opacity: 0; pointer-events: none;
+  transition: opacity .38s ease;
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+}
+.drawer-overlay.open { opacity: 1; pointer-events: all; }
+
+/* panel lateral delicado */
+.drawer {
+  position: fixed; top: 0; right: 0; bottom: 0;
+  width: min(78vw, 300px);
+  z-index: 899;
+  background: rgba(36,24,16,.96);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-left: 1px solid rgba(196,160,122,.12);
+  display: flex; flex-direction: column;
+  justify-content: center; align-items: flex-start;
+  gap: 6px;
+  padding: 52px 36px;
+  transform: translateX(100%);
+  transition: transform .42s cubic-bezier(.22,.68,0,1.1);
+  pointer-events: none;
+}
+.drawer.open { transform: translateX(0); pointer-events: all; }
+
+/* separador sutil arriba */
+.drawer::before {
+  content: 'Refugio Cumbral';
+  font-family: var(--serif); font-size: .75rem; font-weight: 400;
+  color: rgba(196,160,122,.45); letter-spacing: .06em;
+  position: absolute; top: 28px; left: 36px;
+}
+
+.drawer a {
+  font-family: var(--sans); font-size: .72rem; font-weight: 300;
+  letter-spacing: .2em; text-transform: uppercase;
+  color: rgba(244,239,230,.62);
+  padding: 11px 0;
+  width: 100%;
+  border-bottom: 1px solid rgba(196,160,122,.08);
+  transition: color .25s, padding-left .25s;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.drawer a::after { content: '→'; font-size: .7rem; opacity: 0; transition: opacity .25s; }
+.drawer a:hover { color: rgba(244,239,230,.95); padding-left: 6px; }
+.drawer a:hover::after { opacity: .5; }
+.drawer a:last-child { border-bottom: none; }
+
+/* ══════════════════════════════════════════
+   HERO
+══════════════════════════════════════════ */
+#inicio {
+  position: relative; height: 100vh; min-height: 600px;
+  display: flex; align-items: flex-start; padding-top: 138px; overflow: hidden;
+}
+.hero-photo {
+  position: absolute; inset: 0;
+  background: url('https://images.unsplash.com/photo-1483728642387-6c3bdd6c93e5?w=1800&q=80&auto=format&fit=crop') center/cover no-repeat;
+  transform: scale(1.07);
+  animation: kz 18s ease-out forwards;
+}
+@keyframes kz { from { transform: scale(1.07); } to { transform: scale(1); } }
+.hero-grad {
+  position: absolute; inset: 0;
+  background: linear-gradient(155deg, rgba(12,6,2,.3) 0%, rgba(12,6,2,.06) 44%, rgba(12,6,2,.36) 100%);
+}
+.hero-body {
+  position: relative; z-index: 2; width: 100%;
+  display: grid; grid-template-columns: 1fr 1fr;
+  padding: 0 52px;
+}
+.hero-h1 {
+  font-family: var(--serif); font-size: clamp(2.8rem, 5.8vw, 5.4rem);
+  font-weight: 300; line-height: 1.09; color: #f4efe6;
+  opacity: 0; animation: fu 1.3s ease .2s forwards;
+}
+.hero-side {
+  display: flex; flex-direction: column;
+  align-items: flex-end; gap: 24px; padding-top: 8px;
+}
+.hero-sub {
+  font-family: var(--sans); font-size: .77rem; font-weight: 300;
+  line-height: 1.8; color: #f4efe6; max-width: 248px; text-align: right;
+  opacity: 0; animation: fu 1.3s ease .55s forwards;
+}
+.hero-cta {
+  display: inline-flex; align-items: center; gap: 14px;
+  font-family: var(--sans); font-size: .62rem; font-weight: 300;
+  letter-spacing: .2em; text-transform: uppercase; color: #f4efe6;
+  border-bottom: 1px solid rgba(244,239,230,.38); padding-bottom: 4px;
+  transition: gap .35s, border-color .35s;
+  opacity: 0; animation: fu 1.3s ease .9s forwards;
+}
+.hero-cta:hover { gap: 24px; border-color: #f4efe6; }
+@keyframes fu { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:translateY(0); } }
+
+/* ══════════════════════════════════════════
+   SECCIÓN ESPACIO
+══════════════════════════════════════════ */
+#espacio { background: var(--bg); padding: 110px 52px 0; transition: var(--transition); }
+.s-head {
+  display: grid; grid-template-columns: 1fr 1fr 1fr;
+  gap: 44px; margin-bottom: 72px; align-items: start;
+}
+.s-titulo {
+  font-family: var(--serif); font-size: clamp(2rem,4vw,3.5rem);
+  font-weight: 300; line-height: 1.18; color: var(--ink);
+}
+.s-desc {
+  font-family: var(--sans); font-size: .79rem; font-weight: 300;
+  line-height: 1.9; color: var(--text-section); grid-column: 3/4; padding-top: 4px;
+}
+
+/* MOSAICO */
+.mosaico { position: relative; height: 820px; overflow: hidden; }
+.mItem {
+  position: absolute; overflow: hidden; cursor: pointer;
+  opacity: 0; transition: opacity .9s ease;
+  border-radius: 2px;
+}
+.mItem.vis { opacity: 1; }
+.mi1 { width: 40%; height: 360px; top: 0; left: 38%; }
+.mi2 { width: 19%; height: 330px; top: 50px; left: 0; }
+.mi3 { width: 21%; height: 316px; top: 16px; right: 0; }
+.mi4 { width: 28%; height: 286px; top: 414px; left: 25%; }
+.mi5 { width: 17%; height: 210px; top: 448px; left: 0; }
+.mi6 { width: 21%; height: 248px; top: 394px; right: 0; }
+
+/* ══════════════════════════════════════════
+   AMENIDADES
+══════════════════════════════════════════ */
+#amenidades {
+  background: var(--brown-mid); padding: 110px 52px 100px;
+  margin-top: 748px;
+  transition: var(--transition);
+}
+.a-head {
+  display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 44px;
+  border-bottom: 1px solid rgba(222,206,185,.15);
+  padding-bottom: 56px; margin-bottom: 72px; align-items: start;
+}
+.a-titulo {
+  font-family: var(--serif); font-size: clamp(2.6rem,5vw,4.2rem);
+  font-weight: 300; line-height: 1.1; color: #f4efe6;
+}
+.a-tag {
+  font-family: var(--sans); font-size: .62rem; font-weight: 300;
+  letter-spacing: .16em; text-transform: uppercase; color: var(--dim); line-height: 2; padding-top: 8px;
+}
+.a-sub {
+  font-family: var(--sans); font-size: .78rem; font-weight: 300;
+  line-height: 1.88; color: var(--dim); padding-top: 8px; grid-column: 3/4;
+}
+.a-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 2px; }
+.acard {
+  background: rgba(0,0,0,.15); display: flex; flex-direction: column;
+  overflow: hidden; cursor: pointer;
+}
+.acard-ph { overflow: hidden; flex-shrink: 0; }
+.acard-ph .img-wrap { height: 100%; }
+.acard-body { padding: 22px 24px 28px; display: flex; flex-direction: column; gap: 7px; }
+.acard-nombre {
+  font-family: var(--sans); font-size: .6rem; font-weight: 300;
+  letter-spacing: .22em; text-transform: uppercase; color: #f4efe6;
+}
+.acard-det {
+  font-family: var(--serif); font-size: .92rem; font-style: italic;
+  font-weight: 300; line-height: 1.62; color: var(--dim);
+}
+.acard-wide { grid-column: 1/3; }
+.acard-wide .acard-ph { height: 368px; }
+.acard .acard-ph { height: 296px; }
+
+/* ══════════════════════════════════════════
+   UBICACIÓN
+══════════════════════════════════════════ */
+#ubicacion {
+  position: relative; min-height: 100vh;
+  display: flex; flex-direction: column; overflow: hidden;
+  background: var(--brown);
+}
+.loc-bg {
+  position: absolute; inset: 0;
+  background: url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1800&q=80&auto=format') center/cover no-repeat;
+  opacity: .40; transition: opacity 1.6s ease;
+}
+.loc-grad {
+  position: absolute; inset: 0;
+  background: linear-gradient(to bottom, rgba(68,51,42,.55) 0%, rgba(68,51,42,.26) 52%, rgba(68,51,42,.86) 100%);
+}
+.loc-inner {
+  position: relative; z-index: 2;
+  padding: 90px 52px 56px; flex: 1; display: flex; flex-direction: column;
+}
+.loc-titulo {
+  font-family: var(--serif); font-size: clamp(2.2rem,4.4vw,3.8rem);
+  font-weight: 300; color: #f4efe6; margin-bottom: auto; padding-bottom: 68px;
+}
+.loc-coords {
+  display: grid; grid-template-columns: 1fr 1fr 1fr;
+  border-top: 1px solid rgba(222,206,185,.2); padding-top: 34px; gap: 44px;
+}
+.coord {
+  font-family: var(--serif); font-size: clamp(1.1rem,2.4vw,1.7rem);
+  font-weight: 300; color: #f4efe6; letter-spacing: .04em;
+}
+.loc-nota {
+  font-family: var(--sans); font-size: .77rem; font-weight: 300;
+  line-height: 1.88; color: rgba(222,206,185,.76); max-width: 330px;
+}
+.estaciones { position: relative; z-index: 2; display: grid; grid-template-columns: repeat(4,1fr); height: 214px; }
+.est { position: relative; overflow: hidden; cursor: pointer; }
+.est .img-wrap { height: 100%; }
+.est-lbl {
+  position: absolute; bottom: 14px; left: 18px; z-index: 3;
+  font-family: var(--sans); font-size: .58rem; font-weight: 300;
+  letter-spacing: .18em; text-transform: uppercase;
+  color: rgba(222,206,185,.72); pointer-events: none;
+}
+.est .img-wrap img { filter: brightness(.6); }
+.est:hover .img-wrap img { filter: brightness(.88); }
+
+/* ══════════════════════════════════════════
+   GALERÍA ÉPICA — masonry + categorías
+══════════════════════════════════════════ */
+#galeria { background: var(--bg); padding: 110px 52px 100px; transition: var(--transition); }
+.g-head {
+  display: flex; justify-content: space-between; align-items: flex-end;
+  margin-bottom: 56px;
+}
+.g-titulo {
+  font-family: var(--serif); font-size: clamp(2rem,4vw,3.5rem);
+  font-weight: 300; color: var(--ink);
+}
+.g-filters {
+  display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end;
+}
+.g-filter {
+  font-family: var(--sans); font-size: .6rem; font-weight: 300;
+  letter-spacing: .16em; text-transform: uppercase;
+  padding: 8px 18px;
+  border: 1px solid var(--card-border);
+  color: var(--ink2); background: transparent;
+  transition: background .3s, color .3s, border-color .3s;
+  cursor: pointer;
+}
+.g-filter.active, .g-filter:hover {
+  background: var(--gold); border-color: var(--gold); color: #1c1410;
+}
+
+/* masonry grid */
+.masonry {
+  columns: 3; column-gap: 4px;
+  transition: opacity .3s;
+}
+.masonry.filtering { opacity: .4; }
+.m-brick {
+  break-inside: avoid; margin-bottom: 4px;
+  position: relative; overflow: hidden; cursor: pointer;
+  border-radius: 2px;
+  transition: opacity .5s ease, transform .5s ease;
+}
+.m-brick.hidden { opacity: 0; height: 0; margin: 0; overflow: hidden; pointer-events: none; }
+.m-brick .img-wrap { height: auto; }
+.m-brick .img-wrap img {
+  position: relative; height: auto;
+  opacity: 0; transition: opacity .55s ease, transform .7s ease, filter .4s;
+}
+.m-brick .img-wrap.loaded img { opacity: 1; }
+.m-brick:hover .img-wrap img { transform: scale(1.04); filter: brightness(1.06); }
+.m-brick-overlay {
+  position: absolute; inset: 0; z-index: 3;
+  background: linear-gradient(to top, rgba(12,6,2,.7) 0%, transparent 60%);
+  opacity: 0; transition: opacity .35s;
+  display: flex; align-items: flex-end; padding: 18px 16px;
+}
+.m-brick:hover .m-brick-overlay { opacity: 1; }
+.m-brick-label {
+  font-family: var(--serif); font-size: .92rem; font-style: italic;
+  color: rgba(244,239,230,.9); font-weight: 300; line-height: 1.4;
+}
+.m-brick-num {
+  position: absolute; top: 12px; left: 14px; z-index: 4;
+  font-family: var(--sans); font-size: .58rem; font-weight: 300;
+  letter-spacing: .1em; color: rgba(244,239,230,.0);
+  transition: color .3s;
+}
+.m-brick:hover .m-brick-num { color: rgba(244,239,230,.6); }
+
+/* ver más btn */
+.g-more-row {
+  display: flex; justify-content: center; margin-top: 48px;
+}
+.btn-vermas {
+  font-family: var(--sans); font-size: .62rem; font-weight: 300;
+  letter-spacing: .2em; text-transform: uppercase;
+  color: var(--ink); background: transparent;
+  border: 1px solid var(--card-border);
+  padding: 14px 42px;
+  display: inline-flex; align-items: center; gap: 12px;
+  transition: background .3s, border-color .3s, color .3s;
+}
+.btn-vermas::after { content: '↓'; font-size: .9rem; }
+.btn-vermas:hover { background: var(--gold); border-color: var(--gold); color: #1c1410; }
+
+/* ══════════════════════════════════════════
+   LIGHTBOX ÉPICO
+══════════════════════════════════════════ */
+.lb {
+  display: none; position: fixed; inset: 0; z-index: 9999;
+  background: rgba(6,3,1,.97);
+  flex-direction: column;
+}
+.lb.show { display: flex; }
+.lb-topbar {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 20px 28px; flex-shrink: 0;
+  border-bottom: 1px solid rgba(244,239,230,.08);
+}
+.lb-title-text {
+  font-family: var(--serif); font-size: 1.05rem; font-weight: 300;
+  color: rgba(244,239,230,.7); font-style: italic;
+}
+.lb-topright { display: flex; align-items: center; gap: 20px; }
+.lb-counter-top {
+  font-family: var(--sans); font-size: .62rem; font-weight: 300;
+  letter-spacing: .18em; color: rgba(244,239,230,.4);
+}
+.lb-close {
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 1px solid rgba(244,239,230,.18);
+  color: rgba(244,239,230,.7); font-size: 1.1rem;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .25s, color .25s;
+}
+.lb-close:hover { background: rgba(244,239,230,.12); color: #f4efe6; }
+.lb-stage {
+  flex: 1; position: relative;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden; padding: 20px 80px;
+}
+.lb-img-wrap {
+  max-height: 100%; max-width: 100%;
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+}
+.lb-img-wrap img {
+  max-height: calc(100vh - 200px); max-width: 100%; width: auto;
+  object-fit: contain; border-radius: 2px;
+  transition: opacity .3s, transform .3s;
+}
+.lb-img-wrap.lb-loading img { opacity: .2; transform: scale(.98); }
+.lb-prev, .lb-next {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  width: 52px; height: 52px; border-radius: 50%;
+  background: rgba(244,239,230,.06); border: 1px solid rgba(244,239,230,.14);
+  color: rgba(244,239,230,.8); font-size: 1.3rem;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .25s, color .25s, transform .25s;
+  z-index: 2;
+}
+.lb-prev { left: 18px; }
+.lb-next { right: 18px; }
+.lb-prev:hover, .lb-next:hover {
+  background: rgba(244,239,230,.14); color: #f4efe6;
+  transform: translateY(-50%) scale(1.08);
+}
+.lb-bottom {
+  flex-shrink: 0;
+  padding: 14px 28px 20px;
+  border-top: 1px solid rgba(244,239,230,.08);
+  display: flex; flex-direction: column; gap: 10px;
+}
+.lb-caption-text {
+  font-family: var(--serif); font-size: .88rem; font-style: italic;
+  color: rgba(244,239,230,.55); text-align: center;
+}
+.lb-strip {
+  display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px;
+  scrollbar-width: thin; scrollbar-color: rgba(196,160,122,.4) transparent;
+  justify-content: center;
+}
+.lb-strip::-webkit-scrollbar { height: 2px; }
+.lb-strip::-webkit-scrollbar-thumb { background: rgba(196,160,122,.4); }
+.lb-thumb {
+  width: 56px; height: 40px; flex-shrink: 0; overflow: hidden;
+  border: 1.5px solid transparent; border-radius: 2px; cursor: pointer;
+  opacity: .45; transition: opacity .25s, border-color .25s;
+}
+.lb-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.lb-thumb.active { border-color: var(--gold); opacity: 1; }
+.lb-thumb:hover { opacity: .8; }
+
+/* ══════════════════════════════════════════
+   RESERVAS
+══════════════════════════════════════════ */
+#reservas {
+  background: var(--slate);
+  padding: 110px 52px 104px; color: #f4efe6;
+  transition: var(--transition);
+}
+.r-head {
+  display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 52px;
+  border-bottom: 1px solid rgba(222,206,185,.12);
+  padding-bottom: 60px; margin-bottom: 64px; align-items: start;
+}
+.r-titulo {
+  font-family: var(--serif); font-size: clamp(2.2rem,4.4vw,3.8rem);
+  font-weight: 300; color: #f4efe6;
+}
+.r-label {
+  font-family: var(--sans); font-size: .62rem; font-weight: 300;
+  letter-spacing: .16em; text-transform: uppercase; color: var(--dim); padding-top: 10px;
+}
+.r-nota {
+  font-family: var(--sans); font-size: .78rem; font-weight: 300;
+  line-height: 1.86; color: var(--dim); padding-top: 8px;
+}
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.fg { display: flex; flex-direction: column; gap: 8px; }
+.fg.full { grid-column: 1/-1; }
+.flbl {
+  font-family: var(--sans); font-size: .6rem; font-weight: 300;
+  letter-spacing: .18em; text-transform: uppercase; color: var(--dim);
+}
+.req { color: var(--gold); }
+.finp, .ftxt {
+  background: var(--slate2); border: none;
+  border-bottom: 1.5px solid rgba(222,206,185,.15);
+  padding: 14px 16px;
+  font-family: var(--sans); font-size: .8rem; font-weight: 300;
+  color: #f4efe6; outline: none; width: 100%;
+  -webkit-appearance: none; color-scheme: dark;
+  transition: border-color .3s, background .3s;
+}
+.finp::placeholder, .ftxt::placeholder { color: rgba(222,206,185,.2); font-size: .75rem; }
+.finp:focus, .ftxt:focus { border-color: var(--gold); background: rgba(45,55,68,.9); }
+.finp.err, .ftxt.err { border-color: #c06050 !important; }
+.ftxt { resize: vertical; min-height: 100px; }
+.btn-row { grid-column: 1/-1; display: flex; justify-content: flex-end; margin-top: 12px; }
+.btn-enviar {
+  font-family: var(--sans); font-size: .62rem; font-weight: 300;
+  letter-spacing: .22em; text-transform: uppercase; color: #f4efe6;
+  border: 1px solid rgba(222,206,185,.28); padding: 15px 44px;
+  display: inline-flex; align-items: center; gap: 14px;
+  transition: background .35s, border-color .35s, color .35s;
+}
+.btn-enviar::after { content: '→'; font-size: .9rem; }
+.btn-enviar:hover { background: var(--gold); border-color: var(--gold); color: #1c1410; }
+.btn-enviar:disabled { opacity: .45; pointer-events: none; }
+.form-ok {
+  display: none; grid-column: 1/-1;
+  text-align: center; padding: 52px 0;
+}
+.form-ok-title {
+  font-family: var(--serif); font-size: 1.8rem; font-weight: 300;
+  color: var(--gold); margin-bottom: 12px;
+}
+.form-ok-sub {
+  font-family: var(--sans); font-size: .78rem; font-weight: 300;
+  color: var(--dim); line-height: 1.8;
+}
+.form-ok-sub a { color: var(--gold2); transition: color .2s; }
+.form-ok-sub a:hover { color: #f4efe6; }
+
+/* ══════════════════════════════════════════
+   CONTACTO
+══════════════════════════════════════════ */
+#contacto { background: var(--brown-mid); padding: 90px 52px 84px; transition: var(--transition); }
+.c-titulo {
+  font-family: var(--serif); font-size: clamp(1.8rem,3.5vw,3rem);
+  font-weight: 300; color: #f4efe6; margin-bottom: 56px;
+}
+.c-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 2px; }
+.ccard {
+  background: rgba(0,0,0,.14); padding: 38px 34px 42px;
+  display: flex; flex-direction: column; gap: 12px;
+}
+.ccard-icon {
+  width: 34px; height: 34px; border: 1px solid rgba(196,160,122,.3);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--gold); font-size: 1rem; margin-bottom: 4px; flex-shrink: 0;
+}
+.ccard-label {
+  font-family: var(--sans); font-size: .6rem; font-weight: 300;
+  letter-spacing: .2em; text-transform: uppercase; color: var(--dim);
+}
+.ccard-val {
+  font-family: var(--serif); font-size: 1.1rem; font-weight: 400;
+  color: #f4efe6; line-height: 1.55;
+}
+.ccard a {
+  font-family: var(--serif); font-size: 1.1rem;
+  color: var(--gold2); line-height: 1.55; word-break: break-all; transition: color .2s;
+}
+.ccard a:hover { color: #f4efe6; }
+.ccard-sub {
+  font-family: var(--sans); font-size: .73rem; font-weight: 300;
+  color: var(--dim); line-height: 1.72; margin-top: 2px;
+}
+
+/* ══════════════════════════════════════════
+   FOOTER
+══════════════════════════════════════════ */
+footer { background: var(--brown); padding: 74px 52px 40px; transition: var(--transition); }
+.ft-nombre {
+  font-family: var(--serif); font-size: clamp(3rem,7.5vw,6rem);
+  font-weight: 300; color: #f4efe6; line-height: 1.06; margin-bottom: 52px;
+}
+.ft-grid {
+  display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 60px;
+  border-top: 1px solid rgba(222,206,185,.12);
+  padding-top: 44px; margin-bottom: 50px;
+}
+.ft-col p, .ft-col address {
+  font-family: var(--sans); font-size: .74rem; font-weight: 300;
+  line-height: 1.9; color: var(--dim); font-style: normal;
+}
+.ft-col a { color: var(--gold2); transition: color .2s; }
+.ft-col a:hover { color: #f4efe6; }
+.ft-links { list-style: none; display: flex; flex-direction: column; gap: 7px; }
+.ft-links a { font-family: var(--sans); font-size: .74rem; font-weight: 300; color: var(--dim); transition: color .2s; }
+.ft-links a:hover { color: #f4efe6; }
+.ft-bottom {
+  display: flex; justify-content: space-between; align-items: center;
+  border-top: 1px solid rgba(222,206,185,.1); padding-top: 26px;
+}
+.ft-legal { display: flex; gap: 30px; }
+.ft-legal a {
+  font-family: var(--sans); font-size: .59rem; font-weight: 300;
+  letter-spacing: .14em; text-transform: uppercase;
+  color: rgba(222,206,185,.34); transition: color .2s;
+}
+.ft-legal a:hover { color: #f4efe6; }
+.ft-copy {
+  font-family: var(--sans); font-size: .63rem; font-weight: 300;
+  color: rgba(222,206,185,.32); text-align: right; line-height: 1.7;
+}
+
+/* ══════════════════════════════════════════
+   REVEAL
+══════════════════════════════════════════ */
+.rv { opacity:0; transform:translateY(28px); transition:opacity .85s ease,transform .85s ease; }
+.rv.d1 { transition-delay:.12s; }
+.rv.d2 { transition-delay:.26s; }
+.rv.d3 { transition-delay:.42s; }
+.rv.in { opacity:1; transform:translateY(0); }
+
+/* ══════════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════════ */
+@media(max-width:1024px) {
+  .masonry { columns: 2; }
+  .a-grid { grid-template-columns: 1fr 1fr; }
+  .acard-wide { grid-column: 1/-1; }
+}
+@media(max-width:820px) {
+  nav { padding: 18px 24px; }
+  nav.stuck { padding: 12px 24px; }
+  .nav-ul { display: none; }
+  .hbg { display: flex; }
+  #inicio { padding-top: 96px; }
+  .hero-body { grid-template-columns: 1fr; padding: 0 24px; gap: 24px; }
+  .hero-side { align-items: flex-start; }
+  .hero-sub { text-align: left; max-width: 100%; }
+  #espacio { padding: 72px 24px 0; }
+  .s-head { grid-template-columns: 1fr; gap: 16px; }
+  .s-desc { grid-column: 1; }
+  .mosaico {
+    position: static !important; height: auto !important;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 3px; overflow: visible;
+  }
+  .mItem { position: static !important; width: 100% !important; height: 200px !important; opacity: 0; }
+  .mItem.vis { opacity: 1; }
+  .mi1 { grid-column: 1/-1; height: 260px !important; }
+  #amenidades { padding: 72px 24px 80px; margin-top: 0; }
+  .a-head { grid-template-columns: 1fr; gap: 16px; }
+  .a-tag, .a-sub { grid-column: 1; }
+  .a-grid { grid-template-columns: 1fr; }
+  .acard-wide { grid-column: 1; }
+  .acard-wide .acard-ph, .acard .acard-ph { height: 240px; }
+  .loc-inner { padding: 64px 24px 44px; }
+  .loc-coords { grid-template-columns: 1fr; gap: 18px; }
+  .estaciones { grid-template-columns: 1fr 1fr; height: 280px; }
+  #galeria { padding: 72px 24px 80px; }
+  .g-head { flex-direction: column; align-items: flex-start; gap: 24px; }
+  .g-filters { justify-content: flex-start; }
+  .masonry { columns: 2; column-gap: 3px; }
+  #reservas { padding: 72px 24px 80px; }
+  .r-head { grid-template-columns: 1fr; gap: 16px; }
+  .r-nota { grid-column: 1; }
+  .form-grid { grid-template-columns: 1fr; }
+  .fg.full { grid-column: 1; }
+  #contacto { padding: 72px 24px 64px; }
+  .c-grid { grid-template-columns: 1fr; }
+  footer { padding: 56px 24px 32px; }
+  .ft-grid { grid-template-columns: 1fr; gap: 28px; }
+  .ft-bottom { flex-direction: column; gap: 16px; align-items: flex-start; }
+  .ft-copy { text-align: left; }
+  .lb-stage { padding: 16px 54px; }
+  .lb-prev { left: 6px; width: 40px; height: 40px; }
+  .lb-next { right: 6px; width: 40px; height: 40px; }
+  .lb-strip { justify-content: flex-start; }
+  .theme-btn { bottom: 20px; right: 20px; width: 42px; height: 42px; }
+}
+@media(max-width:460px) {
+  .masonry { columns: 1; }
+  .hero-h1 { font-size: 2.4rem; }
+  .a-titulo { font-size: 2.4rem; }
+  .r-titulo { font-size: 2.2rem; }
+  .ft-nombre { font-size: 2.8rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- DARK MODE TOGGLE -->
+<button class="theme-btn" id="themeBtn" aria-label="Cambiar tema">
+  <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+  <svg class="icon-sun"  width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+</button>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#inicio" class="nav-logo">Refugio Cumbral</a>
+  <ul class="nav-ul">
+    <li><a href="#espacio">El Refugio</a></li>
+    <li><a href="#amenidades">Servicios</a></li>
+    <li><a href="#ubicacion">Ubicación</a></li>
+    <li><a href="#galeria">Galería</a></li>
+    <li><a href="#reservas" class="nav-reservar">Reservar</a></li>
+  </ul>
+  <button class="hbg" id="hbg" aria-label="Menú">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="drawer-overlay" id="drawerOverlay"></div>
+<div class="drawer" id="drawer">
+  <a href="#espacio">El Refugio</a>
+  <a href="#amenidades">Servicios</a>
+  <a href="#ubicacion">Ubicación</a>
+  <a href="#galeria">Galería</a>
+  <a href="#reservas">Reservar</a>
+  <a href="#contacto">Contacto</a>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Galería de fotos">
+  <div class="lb-topbar">
+    <span class="lb-title-text" id="lb-title">Refugio Cumbral</span>
+    <div class="lb-topright">
+      <span class="lb-counter-top" id="lb-counter"></span>
+      <button class="lb-close" id="lb-close" aria-label="Cerrar">&#x2715;</button>
+    </div>
+  </div>
+  <div class="lb-stage">
+    <button class="lb-prev" id="lb-prev" aria-label="Anterior">&#8249;</button>
+    <div class="lb-img-wrap" id="lb-img-wrap">
+      <img src="" alt="" id="lb-img">
+    </div>
+    <button class="lb-next" id="lb-next" aria-label="Siguiente">&#8250;</button>
+  </div>
+  <div class="lb-bottom">
+    <p class="lb-caption-text" id="lb-caption"></p>
+    <div class="lb-strip" id="lb-strip"></div>
+  </div>
+</div>
+
+<!-- HERO -->
+<section id="inicio">
+  <div class="hero-photo"></div>
+  <div class="hero-grad"></div>
+  <div class="hero-body">
+    <div>
+      <h1 class="hero-h1">Escapá del<br>Asfalto.<br>Encontrá tu Silencio.</h1>
+    </div>
+    <div class="hero-side">
+      <p class="hero-sub">Un refugio remoto y austero tallado en el paisaje salvaje. Para el espíritu independiente que busca claridad absoluta.</p>
+      <a href="#reservas" class="hero-cta">Reservá tu Escapada</a>
+    </div>
+  </div>
+</section>
+
+<!-- EL ESPACIO -->
+<section id="espacio">
+  <div class="s-head rv">
+    <h2 class="s-titulo">El Refugio<br>en Bruto</h2>
+    <div></div>
+    <p class="s-desc">Despojamos el Refugio Cumbral hasta lo absolutamente esencial. Olvidate de la perfección pulida: este es un retiro auténtico construido con materiales nobles y un respeto profundo por el paisaje indómito.</p>
+  </div>
+  <div class="mosaico" id="mosaico">
+    <div class="mItem mi1" data-src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1400&q=85&auto=format" data-caption="Living principal con ventanales al bosque">
+      <div class="img-wrap"><img data-lazy="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=900&q=80&auto=format" alt="Living con ventanales al bosque"></div>
+    </div>
+    <div class="mItem mi2" data-src="https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=1200&q=85&auto=format" data-caption="Ducha de piedra oscura">
+      <div class="img-wrap"><img data-lazy="https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=600&q=80&auto=format" alt="Ducha de piedra"></div>
+    </div>
+    <div class="mItem mi3" data-src="https://images.unsplash.com/photo-1616594039964-ae9021a400a0?w=1200&q=85&auto=format" data-caption="Baño con mesada de madera natural">
+      <div class="img-wrap"><img data-lazy="https://images.unsplash.com/photo-1616594039964-ae9021a400a0?w=700&q=80&auto=format" alt="Baño con mesada"></div>
+    </div>
+    <div class="mItem mi4" data-src="https://images.unsplash.com/photo-1484154218962-a197022b5858?w=1400&q=85&auto=format" data-caption="Estufa de piedra en el living">
+      <div class="img-wrap"><img data-lazy="https://images.unsplash.com/photo-1484154218962-a197022b5858?w=800&q=80&auto=format" alt="Estufa de piedra"></div>
+    </div>
+    <div class="mItem mi5" data-src="https://images.unsplash.com/photo-1449158743715-0a90ebb6d2d8?w=1400&q=85&auto=format" data-caption="Exterior del refugio en la montaña">
+      <div class="img-wrap"><img data-lazy="https://images.unsplash.com/photo-1449158743715-0a90ebb6d2d8?w=500&q=80&auto=format" alt="Exterior refugio"></div>
+    </div>
+    <div class="mItem mi6" data-src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=1200&q=85&auto=format" data-caption="Detalle de techo en madera natural">
+      <div class="img-wrap"><img data-lazy="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=600&q=80&auto=format" alt="Techo de madera"></div>
+    </div>
+  </div>
+</section>
+
+<!-- AMENIDADES -->
+<section id="amenidades">
+  <div class="a-head rv">
+    <h2 class="a-titulo">Confort<br>Esencial</h2>
+    <div><p class="a-tag">Todo lo que necesitás<br>nada que no usarás</p></div>
+    <p class="a-sub">Lo que transforma un lugar remoto en un refugio que no querés dejar. Cada detalle fue elegido para que la lejanía sea un privilegio y no un sacrificio.</p>
+  </div>
+  <div class="a-grid">
+    <div class="acard acard-wide rv" data-src="https://images.unsplash.com/photo-1484154218962-a197022b5858?w=1600&q=85&auto=format" data-caption="Chimenea de piedra">
+      <div class="acard-ph"><div class="img-wrap"><img data-lazy="https://images.unsplash.com/photo-1484154218962-a197022b5858?w=1200&q=80&auto=format" alt="Chimenea de piedra"></div></div>
+      <div class="acard-body"><span class="acard-nombre">Chimenea de Piedra</span><p class="acard-det">Para fuegos que crepitan y un calor sin filtros contra el frío de la montaña.</p></div>
+    </div>
+    <div class="acard rv d1" data-src="https://images.unsplash.com/photo-1571902943202-507ec2618e8f?w=1200&q=85&auto=format" data-caption="Bañera de inmersión con vista al paisaje">
+      <div class="acard-ph"><div class="img-wrap"><img data-lazy="https://images.unsplash.com/photo-1571902943202-507ec2618e8f?w=700&q=80&auto=format" alt="Bañera de inmersión"></div></div>
+      <div class="acard-body"><span class="acard-nombre">Bañera de Inmersión</span><p class="acard-det">Con vistas al paisaje indómito. Agua caliente. Sin timer.</p></div>
+    </div>
+    <div class="acard rv d2" data-src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1200&q=85&auto=format" data-caption="Colección de vinilos curada">
+      <div class="acard-ph"><div class="img-wrap"><img data-lazy="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=700&q=80&auto=format" alt="Tocadiscos de vinilo"></div></div>
+      <div class="acard-body"><span class="acard-nombre">Colección de Vinilos</span><p class="acard-det">Folk, jazz y rock de garage. Sin Wi-Fi, sin distracciones.</p></div>
+    </div>
+    <div class="acard rv d1" data-src="https://images.unsplash.com/photo-1556909212-d5b604d0c90d?w=1200&q=85&auto=format" data-caption="Despensa abastecida con productos locales">
+      <div class="acard-ph"><div class="img-wrap"><img data-lazy="https://images.unsplash.com/photo-1556909212-d5b604d0c90d?w=700&q=80&auto=format" alt="Despensa abastecida"></div></div>
+      <div class="acard-body"><span class="acard-nombre">Despensa Abastecida</span><p class="acard-det">Café de especialidad, pan artesanal y esenciales para mañanas simples.</p></div>
+    </div>
+    <div class="acard rv d2" data-src="https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=1200&q=85&auto=format" data-caption="Ducha tipo lluvia en piedra">
+      <div class="acard-ph"><div class="img-wrap"><img data-lazy="https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=700&q=80&auto=format" alt="Ducha tipo lluvia"></div></div>
+      <div class="acard-body"><span class="acard-nombre">Ducha Tipo Lluvia</span><p class="acard-det">Paredes de pizarra bruta. Presión de lluvia. Toda el agua caliente de la montaña.</p></div>
+    </div>
+    <div class="acard rv d3" data-src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=1200&q=85&auto=format" data-caption="Biblioteca curada con libros seleccionados">
+      <div class="acard-ph"><div class="img-wrap"><img data-lazy="https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=700&q=80&auto=format" alt="Biblioteca curada"></div></div>
+      <div class="acard-body"><span class="acard-nombre">Biblioteca Curada</span><p class="acard-det">Literatura seleccionada. Noches lentas sin pantallas.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- UBICACIÓN -->
+<section id="ubicacion">
+  <div class="loc-bg" id="locbg"></div>
+  <div class="loc-grad"></div>
+  <div class="loc-inner">
+    <h2 class="loc-titulo rv">En el Corazón<br>de la Nada</h2>
+    <div class="loc-coords">
+      <div class="rv"><p class="coord">46°14'08.3"S</p></div>
+      <div class="rv d1"><p class="coord">71°32'51.6"O</p></div>
+      <div class="rv d2"><p class="loc-nota">Deliberadamente remoto, enclavado en la Patagonia profunda. El viaje hasta aquí es parte de la experiencia. Las coordenadas exactas de acceso se entregan con la confirmación de reserva.</p></div>
+    </div>
+  </div>
+  <div class="estaciones">
+    <div class="est" data-src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1200&q=85&auto=format" data-caption="Otoño patagónico">
+      <div class="img-wrap"><img data-lazy="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&q=75&auto=format" alt="Otoño"></div>
+      <span class="est-lbl">Otoño</span>
+    </div>
+    <div class="est" data-src="https://images.unsplash.com/photo-1491466424936-e304919aada7?w=1200&q=85&auto=format" data-caption="Invierno en la montaña">
+      <div class="img-wrap"><img data-lazy="https://images.unsplash.com/photo-1491466424936-e304919aada7?w=600&q=75&auto=format" alt="Invierno"></div>
+      <span class="est-lbl">Invierno</span>
+    </div>
+    <div class="est" data-src="https://images.unsplash.com/photo-1462275646964-a0e3386b89fa?w=1200&q=85&auto=format" data-caption="Primavera en el bosque">
+      <div class="img-wrap"><img data-lazy="https://images.unsplash.com/photo-1462275646964-a0e3386b89fa?w=600&q=75&auto=format" alt="Primavera"></div>
+      <span class="est-lbl">Primavera</span>
+    </div>
+    <div class="est" data-src="https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=1200&q=85&auto=format" data-caption="Verano patagónico">
+      <div class="img-wrap"><img data-lazy="https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=600&q=75&auto=format" alt="Verano"></div>
+      <span class="est-lbl">Verano</span>
+    </div>
+  </div>
+</section>
+
+<!-- GALERÍA ÉPICA -->
+<section id="galeria">
+  <div class="g-head rv">
+    <h2 class="g-titulo">Una Vista<br>con Sustancia</h2>
+    <div class="g-filters">
+      <button class="g-filter active" data-filter="all">Todo</button>
+      <button class="g-filter" data-filter="interior">Interiores</button>
+      <button class="g-filter" data-filter="exterior">Exterior</button>
+      <button class="g-filter" data-filter="detalle">Detalles</button>
+    </div>
+  </div>
+
+  <div class="masonry rv" id="masonry">
+    <!-- INTERIORES -->
+    <div class="m-brick" data-cat="interior" data-src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1400&q=85&auto=format" data-caption="Living principal — ventanales al bosque nevado">
+      <div class="img-wrap"><img data-lazy="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=700&q=78&auto=format" alt="Living principal"></div>
+      <div class="m-brick-overlay"><span class="m-brick-label">Living principal</span></div>
+      <span class="m-brick-num">01</span>
+    </div>
+    <div class="m-brick" data-cat="exterior" data-src="https://images.unsplash.com/photo-1449158743715-0a90ebb6d2d8?w=1600&q=85&auto=format" data-caption="Exterior al atardecer — refugio en la ladera">
+      <div class="img-wrap"><img data-lazy="https://images.unsplash.com/photo-1449158743715-0a90ebb6d2d8?w=700&q=78&auto=format" alt="Exterior refugio"></div>
+      <div class="m-brick-overlay"><span class="m-brick-label">Exterior al atardecer</span></div>
+      <span class="m-brick-num">02</span>
+    </div>
+    <div class="m-brick" data-cat="detalle" data-src="https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=1200&q=85&auto=format" data-caption="Ducha de piedra oscura — lluvia caliente">
+      <div class="img-wrap"><img data-lazy="https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=600&q=78&auto=format" alt="Ducha de piedra"></div>
+      <div class="m-brick-overlay"><span class="m-brick-label">Ducha de piedra</span></div>
+      <span class="m-brick-num">03</span>
+    </div>
+    <div class="m-brick" data-cat="interior" data-src="https://images.unsplash.com/photo-1484154218962-a197022b5858?w=1400&q=85&auto=format" data-caption="Chimenea — calor de piedra y leña">
+      <div class="img-wrap"><img data-lazy="https://images.unsplash.com/photo-1484154218962-a197022b5858?w=700&q=78&auto=format" alt="Chimenea"></div>
+      <div class="m-brick-overlay"><span class="m-brick-label">Chimenea de piedra</span></div>
+      <span class="m-brick-num">04</span>
+    </div>
+    <div class="m-brick" data-cat="exterior" data-src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1600&q=85&auto=format" data-caption="El paisaje que nos rodea — montañas y niebla">
+      <div class="img-wrap"><img data-lazy="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=700&q=78&auto=format" alt="Paisaje montañoso"></div>
+      <div class="m-brick-overlay"><span class="m-brick-label">El paisaje que nos rodea</span></div>
+      <span class="m-brick-num">05</span>
+    </div>
+    <div class="m-brick" data-cat="detalle" data-src="https://images.unsplash.com/photo-1616594039964-ae9021a400a0?w=1200&q=85&auto=format" data-caption="Baño — mesada de madera natural y mármol">
+      <div class="img-wrap"><img data-lazy="https://images.unsplash.com/photo-1616594039964-ae9021a400a0?w=600&q=78&auto=format" alt="Baño con madera y mármol"></div>
+      <div class="m-brick-overlay"><span class="m-brick-label">Mesada de madera natural</span></div>
+      <span class="m-brick-num">06</span>
+    </div>
+    <div class="m-brick" data-cat="interior" data-src="https://images.unsplash.com/photo-1556909212-d5b604d0c90d?w=1200&q=85&auto=format" data-caption="Cocina abierta — materiales nobles y luz de montaña">
+      <div class="img-wrap"><img data-lazy="https://images.unsplash.com/photo-1556909212-d5b604d0c90d?w=700&q=78&auto=format" alt="Cocina abierta"></div>
+      <div class="m-brick-overlay"><span class="m-brick-label">Cocina abierta</span></div>
+      <span class="m-brick-num">07</span>
+    </div>
+    <div class="m-brick" data-cat="exterior" data-src="https://images.unsplash.com/photo-1491466424936-e304919aada7?w=1600&q=85&auto=format" data-caption="Invierno — el refugio bajo la nieve">
+      <div class="img-wrap"><img data-lazy="https://images.unsplash.com/photo-1491466424936-e304919aada7?w=700&q=78&auto=format" alt="Refugio en invierno"></div>
+      <div class="m-brick-overlay"><span class="m-brick-label">Invierno en la montaña</span></div>
+      <span class="m-brick-num">08</span>
+    </div>
+    <div class="m-brick" data-cat="detalle" data-src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1200&q=85&auto=format" data-caption="Tocadiscos — música analógica sin señal">
+      <div class="img-wrap"><img data-lazy="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=600&q=78&auto=format" alt="Tocadiscos de vinilo"></div>
+      <div class="m-brick-overlay"><span class="m-brick-label">Vinilo — música analógica</span></div>
+      <span class="m-brick-num">09</span>
+    </div>
+    <div class="m-brick" data-cat="interior" data-src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=1200&q=85&auto=format" data-caption="Biblioteca — literatura seleccionada para noches largas">
+      <div class="img-wrap"><img data-lazy="https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=600&q=78&auto=format" alt="Biblioteca curada"></div>
+      <div class="m-brick-overlay"><span class="m-brick-label">Biblioteca curada</span></div>
+      <span class="m-brick-num">10</span>
+    </div>
+    <div class="m-brick" data-cat="exterior" data-src="https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=1600&q=85&auto=format" data-caption="Verano patagónico — cielo interminable">
+      <div class="img-wrap"><img data-lazy="https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=700&q=78&auto=format" alt="Verano patagónico"></div>
+      <div class="m-brick-overlay"><span class="m-brick-label">Verano patagónico</span></div>
+      <span class="m-brick-num">11</span>
+    </div>
+    <div class="m-brick" data-cat="detalle" data-src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=1200&q=85&auto=format" data-caption="Techo de madera — artesanía local">
+      <div class="img-wrap"><img data-lazy="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=600&q=78&auto=format" alt="Techo de madera artesanal"></div>
+      <div class="m-brick-overlay"><span class="m-brick-label">Techo artesanal en madera</span></div>
+      <span class="m-brick-num">12</span>
+    </div>
+  </div>
+
+  <div class="g-more-row">
+    <button class="btn-vermas" id="btnVermas">Ver toda la galería</button>
+  </div>
+</section>
+
+<!-- RESERVAS -->
+<section id="reservas">
+  <div class="r-head rv">
+    <h2 class="r-titulo">Tomá tu<br>Lugar</h2>
+    <p class="r-label">Para Reservas</p>
+    <p class="r-nota">Completá el formulario para solicitar tus fechas. Te respondemos dentro de las 24 horas hábiles.</p>
+  </div>
+  <div class="form-grid rv" id="formEl">
+    <div class="fg"><label class="flbl">Nombre <span class="req">*</span></label><input type="text" class="finp" id="f-nombre" placeholder="Tu nombre" required></div>
+    <div class="fg"><label class="flbl">Apellido <span class="req">*</span></label><input type="text" class="finp" id="f-apellido" placeholder="Tu apellido" required></div>
+    <div class="fg"><label class="flbl">Correo Electrónico <span class="req">*</span></label><input type="email" class="finp" id="f-email" placeholder="tu@correo.com" required></div>
+    <div class="fg"><label class="flbl">Teléfono</label><input type="tel" class="finp" placeholder="+54 376 000 0000"></div>
+    <div class="fg"><label class="flbl">Fecha de Llegada <span class="req">*</span></label><input type="date" class="finp" id="f-llegada" required></div>
+    <div class="fg"><label class="flbl">Fecha de Salida <span class="req">*</span></label><input type="date" class="finp" id="f-salida" required></div>
+    <div class="fg full"><label class="flbl">Mensaje</label><textarea class="ftxt" placeholder="Cantidad de personas, requisitos especiales, preguntas sobre el acceso..."></textarea></div>
+    <div class="btn-row"><button type="button" class="btn-enviar" id="btnEnviar">Enviar Solicitud</button></div>
+    <div class="form-ok" id="formOk">
+      <p class="form-ok-title">Solicitud enviada</p>
+      <p class="form-ok-sub">Romina Vera te contactará en menos de 24 horas.<br>
+      <a href="mailto:rominamicaelavera@gmail.com">rominamicaelavera@gmail.com</a> &nbsp;|&nbsp; <a href="tel:+543764817734">3764 817734</a></p>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACTO -->
+<section id="contacto">
+  <h2 class="c-titulo rv">Hablemos</h2>
+  <div class="c-grid">
+    <div class="ccard rv">
+      <div class="ccard-icon">✉</div>
+      <span class="ccard-label">Correo Electrónico</span>
+      <a href="mailto:rominamicaelavera@gmail.com" class="ccard-val">rominamicaelavera@gmail.com</a>
+      <p class="ccard-sub">Respondemos dentro de las 24 hs hábiles.</p>
+    </div>
+    <div class="ccard rv d1">
+      <div class="ccard-icon">✆</div>
+      <span class="ccard-label">WhatsApp / Celular</span>
+      <a href="https://wa.me/543764817734" target="_blank" rel="noopener" class="ccard-val">3764 817734</a>
+      <p class="ccard-sub">Disponible de lunes a sábado, 9 a 20 hs.</p>
+    </div>
+    <div class="ccard rv d2">
+      <div class="ccard-icon">◈</div>
+      <span class="ccard-label">Responsable</span>
+      <p class="ccard-val">Romina Vera</p>
+      <p class="ccard-sub">Propietaria y anfitriona. Cada consulta la atendemos personalmente.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p class="ft-nombre">Refugio<br>Cumbral</p>
+  <div class="ft-grid">
+    <div class="ft-col"><p>Un refugio remoto y austero en la Patagonia profunda. Diseñado para el espíritu independiente que busca claridad absoluta en el paisaje indómito.</p></div>
+    <div class="ft-col">
+      <address>Patagonia, Argentina<br><br>
+      <a href="tel:+543764817734">3764 817734</a><br>
+      <a href="mailto:rominamicaelavera@gmail.com">rominamicaelavera@gmail.com</a></address>
+    </div>
+    <div class="ft-col">
+      <ul class="ft-links">
+        <li><a href="https://wa.me/543764817734" target="_blank" rel="noopener">WhatsApp</a></li>
+        <li><a href="#">Instagram</a></li>
+        <li><a href="#">Facebook</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="ft-bottom">
+    <div class="ft-legal"><a href="#">Política de Privacidad</a><a href="#">Términos de Uso</a></div>
+    <p class="ft-copy">© 2025 Refugio Cumbral<br>Romina Vera — Todos los derechos reservados.</p>
+  </div>
+</footer>
+
+<script>
+/* ════ LAZY IMAGE LOADER ════ */
+function lazyLoad() {
+  const imgs = document.querySelectorAll('img[data-lazy]');
+  const obs = new IntersectionObserver((entries, o) => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      const img = e.target;
+      const wrap = img.closest('.img-wrap');
+      const newImg = new Image();
+      newImg.onload = () => {
+        img.src = newImg.src;
+        if (wrap) wrap.classList.add('loaded');
+      };
+      newImg.src = img.dataset.lazy;
+      delete img.dataset.lazy;
+      o.unobserve(img);
+    });
+  }, { rootMargin: '200px 0px' });
+  imgs.forEach(img => obs.observe(img));
+}
+lazyLoad();
+
+/* ════ DARK MODE ════ */
+const html = document.documentElement;
+const themeBtn = document.getElementById('themeBtn');
+const savedTheme = localStorage.getItem('rc-theme') || 'light';
+html.setAttribute('data-theme', savedTheme);
+
+themeBtn.addEventListener('click', () => {
+  const next = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+  html.setAttribute('data-theme', next);
+  localStorage.setItem('rc-theme', next);
+});
+
+/* ════ NAV SCROLL ════ */
+const navEl = document.getElementById('nav');
+window.addEventListener('scroll', () => navEl.classList.toggle('stuck', window.scrollY > 60), {passive:true});
+
+/* ════ HAMBURGER ════ */
+const hbg = document.getElementById('hbg');
+const drawer = document.getElementById('drawer');
+const drawerOverlay = document.getElementById('drawerOverlay');
+
+function toggleDrawer(force) {
+  const open = force !== undefined ? force : !drawer.classList.contains('open');
+  hbg.classList.toggle('open', open);
+  drawer.classList.toggle('open', open);
+  drawerOverlay.classList.toggle('open', open);
+  document.body.style.overflow = open ? 'hidden' : '';
+}
+
+hbg.addEventListener('click', () => toggleDrawer());
+drawerOverlay.addEventListener('click', () => toggleDrawer(false));
+drawer.querySelectorAll('a').forEach(a => a.addEventListener('click', () => toggleDrawer(false)));
+
+/* ════ SMOOTH SCROLL ════ */
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const t = document.querySelector(a.getAttribute('href'));
+    if (!t) return;
+    e.preventDefault();
+    window.scrollTo({ top: t.getBoundingClientRect().top + window.scrollY - 70, behavior: 'smooth' });
+  });
+});
+
+/* ════ REVEAL ════ */
+const rvEls = document.querySelectorAll('.rv');
+new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+}, {threshold:.1}).observe ? (() => {
+  const o = new IntersectionObserver(entries => entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('in'); }), {threshold:.1});
+  rvEls.forEach(el => o.observe(el));
+})() : rvEls.forEach(el => el.classList.add('in'));
+
+/* ════ MOSAICO STAGGER ════ */
+const mItems = document.querySelectorAll('.mItem');
+const mosaicEl = document.getElementById('mosaico');
+if (mosaicEl) {
+  new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        mItems.forEach((el, i) => setTimeout(() => el.classList.add('vis'), i * 130));
+      }
+    });
+  }, {threshold:.05}).observe(mosaicEl);
+}
+
+/* ════ LOCATION BG CROSSFADE ════ */
+const locBgs = [
+  'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1800&q=80&auto=format',
+  'https://images.unsplash.com/photo-1491466424936-e304919aada7?w=1800&q=80&auto=format',
+  'https://images.unsplash.com/photo-1462275646964-a0e3386b89fa?w=1800&q=80&auto=format',
+  'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=1800&q=80&auto=format',
+];
+let lbgIdx = 0;
+const locbgEl = document.getElementById('locbg');
+if (locbgEl) {
+  setInterval(() => {
+    lbgIdx = (lbgIdx + 1) % locBgs.length;
+    locbgEl.style.opacity = '0';
+    setTimeout(() => { locbgEl.style.backgroundImage = `url('${locBgs[lbgIdx]}')`; locbgEl.style.opacity = '.40'; }, 1000);
+  }, 6000);
+}
+
+/* ════ GALERÍA — FILTROS ════ */
+const filters = document.querySelectorAll('.g-filter');
+const bricks  = document.querySelectorAll('.m-brick');
+const masonry = document.getElementById('masonry');
+
+filters.forEach(f => {
+  f.addEventListener('click', () => {
+    filters.forEach(x => x.classList.remove('active'));
+    f.classList.add('active');
+    const cat = f.dataset.filter;
+    masonry.classList.add('filtering');
+    setTimeout(() => {
+      bricks.forEach(b => {
+        if (cat === 'all' || b.dataset.cat === cat) b.classList.remove('hidden');
+        else b.classList.add('hidden');
+      });
+      masonry.classList.remove('filtering');
+    }, 150);
+  });
+});
+
+/* ════ VER MÁS ════ */
+// Ocultar últimas 4 bricks por defecto
+const allBricks = Array.from(bricks);
+allBricks.slice(8).forEach(b => b.classList.add('hidden'));
+let expanded = false;
+document.getElementById('btnVermas').addEventListener('click', function () {
+  expanded = !expanded;
+  if (expanded) {
+    allBricks.forEach(b => b.classList.remove('hidden'));
+    this.textContent = 'Ver menos';
+    this.querySelector ? null : null;
+    this.innerHTML = 'Mostrar menos ↑';
+  } else {
+    const activeFilter = document.querySelector('.g-filter.active')?.dataset.filter || 'all';
+    allBricks.slice(8).forEach(b => {
+      if (activeFilter === 'all' || b.dataset.cat === activeFilter) b.classList.add('hidden');
+    });
+    this.innerHTML = 'Ver toda la galería';
+  }
+});
+
+/* ════ LIGHTBOX ════ */
+const lb     = document.getElementById('lb');
+const lbImg  = document.getElementById('lb-img');
+const lbWrap = document.getElementById('lb-img-wrap');
+const lbCaption = document.getElementById('lb-caption');
+const lbTitle   = document.getElementById('lb-title');
+const lbCounter = document.getElementById('lb-counter');
+const lbStrip   = document.getElementById('lb-strip');
+
+let gallery = [];
+let current = 0;
+
+function buildGallery() {
+  gallery = [];
+  document.querySelectorAll('[data-src]').forEach(el => {
+    gallery.push({
+      src: el.dataset.src,
+      thumb: el.querySelector('img')?.src || el.dataset.src,
+      caption: el.dataset.caption || ''
+    });
+  });
+}
+
+function buildStrip() {
+  lbStrip.innerHTML = '';
+  gallery.forEach((item, i) => {
+    const t = document.createElement('div');
+    t.className = 'lb-thumb' + (i === current ? ' active' : '');
+    t.innerHTML = `<img src="${item.thumb}" alt="" loading="lazy">`;
+    t.addEventListener('click', () => goTo(i));
+    lbStrip.appendChild(t);
+  });
+}
+
+function goTo(idx) {
+  current = (idx + gallery.length) % gallery.length;
+  lbWrap.classList.add('lb-loading');
+  const newImg = new Image();
+  newImg.onload = () => {
+    lbImg.src = newImg.src;
+    lbImg.alt = gallery[current].caption;
+    lbWrap.classList.remove('lb-loading');
+  };
+  newImg.src = gallery[current].src;
+  lbCaption.textContent = gallery[current].caption;
+  lbTitle.textContent = gallery[current].caption;
+  lbCounter.textContent = `${current + 1} / ${gallery.length}`;
+  lbStrip.querySelectorAll('.lb-thumb').forEach((t, i) => t.classList.toggle('active', i === current));
+  const active = lbStrip.querySelectorAll('.lb-thumb')[current];
+  if (active) active.scrollIntoView({inline:'center', behavior:'smooth', block:'nearest'});
+}
+
+function openLb(idx) {
+  buildGallery();
+  current = idx;
+  lb.classList.add('show');
+  document.body.style.overflow = 'hidden';
+  buildStrip();
+  lbImg.src = '';
+  lbCaption.textContent = '';
+  lbCounter.textContent = `${current + 1} / ${gallery.length}`;
+  const img = new Image();
+  img.onload = () => { lbImg.src = img.src; lbWrap.classList.remove('lb-loading'); };
+  lbWrap.classList.add('lb-loading');
+  img.src = gallery[current].src;
+  lbImg.alt = gallery[current].caption;
+  lbCaption.textContent = gallery[current].caption;
+  lbTitle.textContent = gallery[current].caption;
+}
+
+function closeLb() { lb.classList.remove('show'); document.body.style.overflow = ''; }
+
+document.getElementById('lb-close').addEventListener('click', closeLb);
+document.getElementById('lb-prev').addEventListener('click', () => goTo(current - 1));
+document.getElementById('lb-next').addEventListener('click', () => goTo(current + 1));
+lb.addEventListener('click', e => { if (e.target === lb || e.target === document.getElementById('lb-stage')) closeLb(); });
+
+document.addEventListener('keydown', e => {
+  if (!lb.classList.contains('show')) return;
+  if (e.key === 'Escape') closeLb();
+  if (e.key === 'ArrowLeft') goTo(current - 1);
+  if (e.key === 'ArrowRight') goTo(current + 1);
+});
+
+// swipe touch
+let tsX = 0;
+lb.addEventListener('touchstart', e => { tsX = e.touches[0].clientX; }, {passive:true});
+lb.addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - tsX;
+  if (Math.abs(dx) > 48) goTo(current + (dx < 0 ? 1 : -1));
+}, {passive:true});
+
+// bind click en todos los elementos con data-src
+function bindClicks() {
+  buildGallery();
+  document.querySelectorAll('[data-src]').forEach((el, i) => {
+    el.style.cursor = 'pointer';
+    el.addEventListener('click', () => openLb(i));
+  });
+}
+bindClicks();
+
+/* ════ FORMULARIO ════ */
+const today = new Date().toISOString().split('T')[0];
+const llegada = document.getElementById('f-llegada');
+const salida  = document.getElementById('f-salida');
+llegada.min = today; salida.min = today;
+llegada.addEventListener('change', () => { salida.min = llegada.value; });
+
+document.getElementById('btnEnviar').addEventListener('click', function () {
+  const campos = [
+    { el: document.getElementById('f-nombre'),   ok: v => v.trim().length > 1 },
+    { el: document.getElementById('f-apellido'), ok: v => v.trim().length > 1 },
+    { el: document.getElementById('f-email'),    ok: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) },
+    { el: llegada, ok: v => v.length > 0 },
+    { el: salida,  ok: v => v.length > 0 },
+  ];
+  let valid = true;
+  campos.forEach(({el, ok}) => {
+    el.classList.remove('err');
+    if (!ok(el.value)) { valid = false; el.classList.add('err'); setTimeout(() => el.classList.remove('err'), 2800); }
+  });
+  if (llegada.value && salida.value && new Date(salida.value) <= new Date(llegada.value)) {
+    valid = false; salida.classList.add('err'); setTimeout(() => salida.classList.remove('err'), 2800);
+  }
+  if (!valid) return;
+  document.querySelectorAll('#formEl .fg, #formEl .btn-row').forEach(el => el.style.display = 'none');
+  document.getElementById('formOk').style.display = 'block';
+  this.disabled = true;
+});
+</script>
+</body>
+</html>
